@@ -27,8 +27,8 @@ impl In {
 }
 
 impl In {
-    pub fn build(mut self, args: Vec<String>) -> Result<In, MyError> {
-        let file = File::open(&args[1])?;
+    pub fn build(mut self, arg: &String) -> Result<In, MyError> {
+        let file = File::open(arg)?;
         let reader = BufReader::new(file);
 
         for line_result in reader.lines() {

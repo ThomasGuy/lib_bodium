@@ -4,7 +4,7 @@ use node::Node;
 use std::fmt::Display;
 
 #[derive(Debug, Clone)]
-pub struct List<T: Display> {
+pub(crate) struct List<T: Display> {
     head: Link<T>,
 }
 
@@ -28,6 +28,10 @@ impl<T: Display> List<T> {
             self.head = box_node.next;
             box_node.item
         })
+    }
+
+    pub(crate) fn is_empty(&self) -> bool {
+        self.head.is_none()
     }
 
     pub fn peek(&self) -> Option<&T> {
@@ -62,6 +66,12 @@ impl<T: Display> Drop for List<T> {
         while let Some(mut boxed_node) = cur_link {
             cur_link = boxed_node.next.take();
         }
+    }
+}
+
+impl<T: Display> Default for List<T> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -107,6 +117,7 @@ impl<'a, T: Display> Iterator for IterMut<'a, T> {
 #[cfg(test)]
 mod test {
     use super::List;
+    use pretty_assertions::{self, assert_eq};
 
     #[test]
     fn basics() {

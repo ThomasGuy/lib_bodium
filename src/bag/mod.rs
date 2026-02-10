@@ -41,7 +41,7 @@ impl<T: Display> Bag<T> {
     }
 }
 
-impl<T> Display for Bag<T>
+impl<T: Display> Display for Bag<T>
 where
     T: Display,
 {
@@ -51,6 +51,12 @@ where
             s = format!("{}{} ", s, w);
         }
         writeln!(f, "{}", s)
+    }
+}
+
+impl<T: Display> Default for Bag<T> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

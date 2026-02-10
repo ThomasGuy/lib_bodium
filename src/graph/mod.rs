@@ -1,6 +1,7 @@
 use crate::bag::Bag;
 use std::{fmt::Display, vec::IntoIter};
 
+#[derive(Clone)]
 pub struct Graph {
     pub v: i32,
     e: i32,
@@ -35,10 +36,10 @@ impl Graph {
 
 impl Display for Graph {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let mut s = format!("{} vertices, {} edges\n", self.v, self.e);
+        let mut s = format!("A Graph has {} vertices, {} edges\n", self.v, self.e);
         for v in 0..self.v {
             s = format!("{}{} : ", s, v);
-            s = format!("{}{}", s, self.adj_ref(v).to_string());
+            s = format!("{}{}", s, self.adj_ref(v));
         }
         writeln!(f, "{}", s)
     }
