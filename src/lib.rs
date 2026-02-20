@@ -1,4 +1,3 @@
-// pub mod _d_linked_list;
 pub mod bag;
 pub mod graph;
 pub mod input;
