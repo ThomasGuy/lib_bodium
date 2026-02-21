@@ -34,25 +34,25 @@ impl<T: Display> List<T> {
         self.head.is_none()
     }
 
-    pub fn peek(&self) -> Option<&T> {
-        self.head.as_ref().map(|node| &node.item)
-    }
+    // pub fn peek(&self) -> Option<&T> {
+    //     self.head.as_ref().map(|node| &node.item)
+    // }
 
-    pub fn peek_mut(&mut self) -> Option<&mut T> {
-        self.head.as_mut().map(|node| &mut node.item)
-    }
+    // pub fn peek_mut(&mut self) -> Option<&mut T> {
+    //     self.head.as_mut().map(|node| &mut node.item)
+    // }
 
-    pub fn into_it(self) -> IntoIter<T> {
+    pub fn into_iter(self) -> IntoIter<T> {
         IntoIter(self)
     }
 
-    pub fn it(&self) -> Iter<'_, T> {
+    pub fn iter(&self) -> Iter<'_, T> {
         Iter {
             next: self.head.as_deref(),
         }
     }
 
-    pub fn it_mut(&mut self) -> IterMut<'_, T> {
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
         IterMut {
             next: self.head.as_deref_mut(),
         }
@@ -155,7 +155,7 @@ mod test {
         list.push(2);
         list.push(3);
 
-        let mut iter = list.into_it();
+        let mut iter = list.into_iter();
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(2));
         assert_eq!(iter.next(), Some(1));
@@ -169,7 +169,7 @@ mod test {
         list.push(2);
         list.push(3);
 
-        let mut iter = list.it();
+        let mut iter = list.iter();
         assert_eq!(iter.next(), Some(&3));
         assert_eq!(iter.next(), Some(&2));
         assert_eq!(iter.next(), Some(&1));
@@ -182,7 +182,7 @@ mod test {
         list.push(2);
         list.push(3);
 
-        let mut iter = list.it_mut();
+        let mut iter = list.iter_mut();
         assert_eq!(iter.next(), Some(&mut 3));
         assert_eq!(iter.next(), Some(&mut 2));
         assert_eq!(iter.next(), Some(&mut 1));

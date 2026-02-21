@@ -28,16 +28,16 @@ impl<T: Display> Bag<T> {
         self.size == 0
     }
 
-    pub fn into_it(self) -> IntoIter<T> {
-        self.root.into_it()
+    pub fn into_iter(self) -> IntoIter<T> {
+        self.root.into_iter()
     }
 
-    pub fn it(&self) -> Iter<'_, T> {
-        self.root.it()
+    pub fn iter(&self) -> Iter<'_, T> {
+        self.root.iter()
     }
 
-    pub fn it_mut(&mut self) -> IterMut<'_, T> {
-        self.root.it_mut()
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+        self.root.iter_mut()
     }
 }
 
@@ -47,7 +47,7 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let mut s: String = String::new();
-        for w in self.it() {
+        for w in self.iter() {
             s = format!("{}{} ", s, w);
         }
         writeln!(f, "{}", s)
@@ -74,7 +74,7 @@ mod tests {
         list.add(3);
         println!("bag: {}", list.to_string());
 
-        let mut iter = list.into_it();
+        let mut iter = list.into_iter();
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(2));
         assert_eq!(iter.next(), Some(1));
@@ -88,7 +88,7 @@ mod tests {
         list.add(2);
         list.add(3);
 
-        let mut iter = list.it();
+        let mut iter = list.iter();
         assert_eq!(iter.next(), Some(&3));
         assert_eq!(iter.next(), Some(&2));
         assert_eq!(iter.next(), Some(&1));
@@ -101,7 +101,7 @@ mod tests {
         list.add(2);
         list.add(3);
 
-        let mut iter = list.it_mut();
+        let mut iter = list.iter_mut();
         assert_eq!(iter.next(), Some(&mut 3));
         assert_eq!(iter.next(), Some(&mut 2));
         assert_eq!(iter.next(), Some(&mut 1));

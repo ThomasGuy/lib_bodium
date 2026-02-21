@@ -35,16 +35,16 @@ impl<T: Display> Stack<T> {
         self.root.is_empty()
     }
 
-    pub fn into_it(self) -> IntoIter<T> {
-        self.root.into_it()
+    pub fn into_iter(self) -> IntoIter<T> {
+        self.root.into_iter()
     }
 
-    pub fn it(&self) -> Iter<'_, T> {
-        self.root.it()
+    pub fn iter(&self) -> Iter<'_, T> {
+        self.root.iter()
     }
 
-    pub fn it_mut(&mut self) -> IterMut<'_, T> {
-        self.root.it_mut()
+    pub fn iter_mut(&mut self) -> IterMut<'_, T> {
+        self.root.iter_mut()
     }
 }
 
