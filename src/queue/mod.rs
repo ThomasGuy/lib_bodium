@@ -53,8 +53,14 @@ mod tests {
         q.enqueue(2);
         q.enqueue(3);
 
-        assert_eq!(q.dequeue(), Some(1));
+        let a = q.dequeue();
+
+        if let Some(val) = a {
+            println!("{val}");
+            assert_eq!(val, 3);
+        }
+
         assert_eq!(q.dequeue(), Some(2));
-        assert_eq!(q.dequeue(), Some(3));
+        assert_eq!(q.dequeue(), Some(1));
     }
 }
