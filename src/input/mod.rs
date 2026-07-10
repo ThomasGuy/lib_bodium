@@ -1,40 +1,63 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum MyError {
-    #[error("IO error: {0}")]
-    Io(#[from] std::io::Error),
-
-    #[error("Parse error: {0}")]
-    Parse(#[from] std::num::ParseIntError),
+#[non_exhaustive]
+pub enum INputError {
+    #[error("Failed to open file '{path}': {source}")]
+    Io {
+        path: PathBuf,
+        source: std::io::Error,
+    },
+    #[error("Invalid integer '{text}' on line {line} of '{path}': {source}")]
+    Parse {
+        text: String,
+        line: usize,
+        path: PathBuf,
+        source: std::num::ParseIntError,
+    },
 }
 
 #[derive(Default)]
-pub struct In {
+pub struct IN {
     ints: Vec<i32>,
 }
 
-impl In {
-    pub fn build<P: AsRef<Path>>(path: P) -> Result<Self, MyError> {
-        let file = File::open(path.as_ref())?;
+impl IN {
+    pub fn build<P: AsRef<Path>>(path: P) -> Result<Self, INputError> {
+        let path_buf = path.as_ref().to_path_buf();
+        let file = File::open(&path_buf).map_err(|e| INputError::Io {
+            path: path_buf.clone(),
+            source: e,
+        })?;
+
         let reader = BufReader::new(file);
+        let mut ints = vec![];
 
-        let mut ints = Vec::new();
+        for (index, line_result) in reader.lines().enumerate() {
+            let line_idx = index + 1;
+            let line = line_result.map_err(|e| INputError::Io {
+                path: path_buf.clone(),
+                source: e,
+            })?;
 
-        for line_result in reader.lines() {
-            let line = line_result?;
             for part in line.split_whitespace() {
-                ints.push(part.parse::<i32>()?);
+                let parsed = part.parse::<i32>().map_err(|e| INputError::Parse {
+                    text: part.to_string(),
+                    line: line_idx,
+                    path: path_buf.clone(),
+                    source: e,
+                })?;
+                ints.push(parsed);
             }
         }
         Ok(Self { ints })
     }
 }
 
-impl IntoIterator for In {
+impl IntoIterator for IN {
     type Item = i32;
     type IntoIter = std::vec::IntoIter<i32>;
 

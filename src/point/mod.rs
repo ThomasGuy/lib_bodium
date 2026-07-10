@@ -3,10 +3,10 @@ pub mod slope_order;
 use slope_order::SlopeOrder;
 use std::{cmp::Ordering, fmt::Display};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point {
-    y: i32,
     x: i32,
+    y: i32,
 }
 
 /**
@@ -27,14 +27,6 @@ impl Display for Point {
     }
 }
 
-impl PartialEq for Point {
-    fn eq(&self, other: &Point) -> bool {
-        self.x == other.x && self.y == other.y
-    }
-}
-
-impl Eq for Point {}
-
 impl PartialOrd for Point {
     fn partial_cmp(&self, other: &Point) -> Option<Ordering> {
         Some(self.cmp(other))
@@ -51,14 +43,8 @@ impl PartialOrd for Point {
 */
 impl Ord for Point {
     fn cmp(&self, other: &Point) -> Ordering {
-        // First, compare by y co-ordinate
-        match self.y.cmp(&other.y) {
-            Ordering::Equal => {
-                // If y coords are equal, compare by x coord
-                self.x.cmp(&other.x)
-            }
-            ordering => ordering,
-        }
+        // Tuples compare elements left-to-right natively
+        (self.y, self.x).cmp(&(other.y, other.x))
     }
 }
 
