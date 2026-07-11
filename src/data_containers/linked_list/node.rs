@@ -14,7 +14,7 @@ impl<T: Display> Display for Node<T> {
             f,
             "Node {{ item: {}, next: {} }}",
             self.item,
-            self.next.as_ref().clone().unwrap().item
+            self.next.as_ref().unwrap().item
         )
     }
 }

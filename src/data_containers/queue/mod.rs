@@ -1,16 +1,16 @@
 use std::fmt::Display;
 
-use crate::linked_list::List;
+use crate::data_containers::linked_list::LinkedList;
 
 pub struct Queue<T: Display> {
-    root: List<T>,
+    root: LinkedList<T>,
     size: u32,
 }
 
 impl<T: Display> Queue<T> {
     pub fn new() -> Self {
         Self {
-            root: List::new(),
+            root: LinkedList::new(),
             size: 0,
         }
     }

@@ -60,7 +60,7 @@ impl Point {
      * @param that the other point
      * @return the slope between this point and the argument point
      */
-    fn slope_to(&self, other: &Point) -> f64 {
+    pub fn slope_to(&self, other: &Point) -> f64 {
         if other.x == self.x && other.y == self.y {
             f64::NEG_INFINITY
         } else if other.x == self.x {

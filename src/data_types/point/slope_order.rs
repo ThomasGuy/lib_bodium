@@ -1,4 +1,4 @@
-use crate::point::Point;
+use crate::data_types::point::Point;
 use compare::Compare;
 use std::cmp::Ordering;
 
