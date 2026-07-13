@@ -2,6 +2,8 @@ use crate::data_containers::bag::Bag;
 use std::fmt::Display;
 use thiserror::Error;
 
+pub(super) mod cc;
+
 #[derive(Error, Debug)]
 #[non_exhaustive]
 pub enum GraphError {
@@ -17,14 +19,18 @@ pub enum GraphError {
     },
 }
 
-/*
-    A graph is a set of vertices and a collection of edges that each connect a
-    pair of vertices.
-*/
-#[derive(Clone)]
+/// An Undirected Graph representation.
+///
+/// A graph is a set of vertices and a collection of edges that each connect a
+/// pair of vertices.
+#[derive(Debug, Clone)]
 pub struct Graph {
-    vertex: i32, // verticies
-    edges: i32,  // edges
+    /// Total number of vertices allocated in the graph.
+    vertex: i32,
+    /// Current count of edges connecting vertices.
+    edges: i32,
+    /// An adjacency list where each index represents a vertex mapping to a
+    /// [`Bag`] of its adjacent neighboring vertices.
     adj: Vec<Bag<i32>>,
 }
 
@@ -46,7 +52,6 @@ impl Graph {
     ) -> Result<(), GraphError> {
         for idx in 0..expected_edges {
             let current_edge = idx + 1;
-            // 1. Safely extract your vertex pairs
             let v = iter
                 .next()
                 .ok_or(GraphError::NoData { edge: current_edge })?;
@@ -54,7 +59,7 @@ impl Graph {
                 .next()
                 .ok_or(GraphError::NoData { edge: current_edge })?;
 
-            // 2. Prevent Out of Bounds Panics before hitting the vector array
+            // Prevent Out of Bounds Panics before hitting the vector array
             if v >= self.vertex || v < 0 {
                 return Err(GraphError::OutOfBounds {
                     edge: current_edge,
@@ -89,9 +94,13 @@ impl Graph {
     pub fn edges(&self) -> i32 {
         self.edges
     }
+
+    pub fn get_cc(&self) -> (i32, Vec<Vec<usize>>) {
+        cc::ConnectedComponents::new(self).groups()
+    }
 }
 
-// 4. Zero-allocation string formatter streaming directly to the buffer output
+// Zero-allocation string formatter streaming directly to the buffer output
 impl Display for Graph {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(
@@ -101,7 +110,8 @@ impl Display for Graph {
         )?;
         for v in 0..self.vertex {
             write!(f, "{} : ", v)?;
-            writeln!(f, "{}", self.adj(v))?; // Automatically matches your Bag's Display format
+            // Automatically matches your Bag's Display format
+            writeln!(f, "{}", self.adj(v))?;
         }
         Ok(())
     }
