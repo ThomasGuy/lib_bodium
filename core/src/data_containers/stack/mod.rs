@@ -2,12 +2,12 @@ use crate::data_containers::linked_list::{IntoIter, Iter, IterMut, LinkedList};
 use std::fmt::Display;
 
 #[derive(Debug, Clone)]
-pub struct Stack<T: Display> {
+pub struct Stack<T> {
     root: LinkedList<T>,
     size: u32,
 }
 
-impl<T: Display> Stack<T> {
+impl<T> Stack<T> {
     pub fn new() -> Self {
         Stack {
             root: LinkedList::new(),
@@ -45,14 +45,14 @@ impl<T: Display> Stack<T> {
     }
 }
 
-impl<T: Display> Default for Stack<T> {
+impl<T> Default for Stack<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
 // 1. Implementing IntoIterator for moving ownership (`for item in stack`)
-impl<T: Display> IntoIterator for Stack<T> {
+impl<T> IntoIterator for Stack<T> {
     type Item = T;
     type IntoIter = IntoIter<T>;
 
@@ -62,7 +62,7 @@ impl<T: Display> IntoIterator for Stack<T> {
 }
 
 // 2. Implementing IntoIterator for shared references (`for item in &stack`)
-impl<'a, T: Display> IntoIterator for &'a Stack<T> {
+impl<'a, T> IntoIterator for &'a Stack<T> {
     type Item = &'a T;
     type IntoIter = Iter<'a, T>;
 

@@ -4,12 +4,12 @@ use std::fmt::Display;
 // use std::iter::IntoIterator;
 
 #[derive(Debug, Clone)]
-pub struct Bag<T: Display> {
+pub struct Bag<T> {
     root: LinkedList<T>,
     size: u32,
 }
 
-impl<T: Display> Bag<T> {
+impl<T> Bag<T> {
     pub fn new() -> Self {
         Bag {
             root: LinkedList::new(),
@@ -40,7 +40,7 @@ impl<T: Display> Bag<T> {
 }
 
 // 1. Implementing IntoIterator for moving ownership (`for item in bag`)
-impl<T: Display> IntoIterator for Bag<T> {
+impl<T> IntoIterator for Bag<T> {
     type Item = T;
     type IntoIter = IntoIter<T>;
 
@@ -50,7 +50,7 @@ impl<T: Display> IntoIterator for Bag<T> {
 }
 
 // 2. Implementing IntoIterator for shared references (`for item in &bag`)
-impl<'a, T: Display> IntoIterator for &'a Bag<T> {
+impl<'a, T> IntoIterator for &'a Bag<T> {
     type Item = &'a T;
     type IntoIter = Iter<'a, T>;
 

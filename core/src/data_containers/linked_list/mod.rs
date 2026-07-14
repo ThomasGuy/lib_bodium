@@ -1,16 +1,14 @@
 pub(crate) mod node;
 use node::Node;
 
-use std::fmt::Display;
-
 #[derive(Debug, Clone)]
-pub struct LinkedList<T: Display> {
+pub struct LinkedList<T> {
     head: Link<T>,
 }
 
 type Link<T> = Option<Box<Node<T>>>;
 
-impl<T: Display> LinkedList<T> {
+impl<T> LinkedList<T> {
     pub(crate) fn new() -> Self {
         LinkedList { head: None }
     }
@@ -59,7 +57,7 @@ impl<T: Display> LinkedList<T> {
     }
 }
 
-impl<T: Display> Drop for LinkedList<T> {
+impl<T> Drop for LinkedList<T> {
     fn drop(&mut self) {
         let mut cur_link = self.head.take();
 
@@ -69,26 +67,26 @@ impl<T: Display> Drop for LinkedList<T> {
     }
 }
 
-impl<T: Display> Default for LinkedList<T> {
+impl<T> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-pub struct IntoIter<T: Display>(LinkedList<T>);
+pub struct IntoIter<T>(LinkedList<T>);
 
-impl<T: Display> Iterator for IntoIter<T> {
+impl<T> Iterator for IntoIter<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
         self.0.pop()
     }
 }
 
-pub struct Iter<'a, T: Display> {
+pub struct Iter<'a, T> {
     next: Option<&'a Node<T>>,
 }
 
-impl<'a, T: Display> Iterator for Iter<'a, T> {
+impl<'a, T> Iterator for Iter<'a, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -99,11 +97,11 @@ impl<'a, T: Display> Iterator for Iter<'a, T> {
     }
 }
 
-pub struct IterMut<'a, T: Display> {
+pub struct IterMut<'a, T> {
     next: Option<&'a mut Node<T>>,
 }
 
-impl<'a, T: Display> Iterator for IterMut<'a, T> {
+impl<'a, T> Iterator for IterMut<'a, T> {
     type Item = &'a mut T;
 
     fn next(&mut self) -> Option<Self::Item> {

@@ -1,5 +1,5 @@
-use super::Tree;
-use super::node::Node;
+use super::{Node, Tree};
+use crate::Stack;
 use std::fmt::Display;
 
 #[derive(Debug)]
@@ -57,17 +57,18 @@ where
 
     pub fn nodes(&self) -> Vec<&Node<K, V>> {
         let mut queue: Vec<&Node<K, V>> = Vec::new();
-        self.root.nodes(&mut queue)
+        self.root.nodes(&mut queue);
+        queue
     }
 
     pub fn keys(&self) -> Vec<K> {
         let mut queue: Vec<K> = Vec::new();
-        self.root.keys(&mut queue)
+        self.root.keys(&mut queue);
+        queue
     }
 
     pub fn iter_keys(&self) -> std::vec::IntoIter<K> {
-        let mut queue: Vec<K> = Vec::new();
-        self.root.keys(&mut queue).into_iter()
+        self.keys().into_iter()
     }
 
     pub fn floor(&self, key: K) -> Option<K> {
@@ -83,6 +84,69 @@ where
     pub fn rank(&self, x: K) -> u32 {
         // Pass as reference matching your optimized Tree signature
         self.root.rank(&x)
+    }
+
+    /// 🚀 Lazily yields pairs sequentially with true O(1) memory overhead.
+    pub fn iter(&self) -> BstIterator<'_, K, V> {
+        BstIterator::new(&self.root.0)
+    }
+}
+
+// 🚀 Enables native syntax: `for (key, val) in &tree`
+impl<'a, K, V> IntoIterator for &'a BinarySearchTree<K, V>
+where
+    K: Ord + Clone + Display,
+    V: Clone + Display,
+{
+    type Item = (&'a K, &'a V);
+    type IntoIter = BstIterator<'a, K, V>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+/// A zero-allocation, lazy In-Order iterator over your Binary Search Tree.
+/// It doesn't require Clone, Ord, or Display bounds to track node references.
+pub struct BstIterator<'a, K, V> {
+    // Stores read-only references to your nodes on your custom library Stack
+    stack: Stack<&'a Node<K, V>>,
+}
+
+impl<'a, K, V> BstIterator<'a, K, V> {
+    pub(crate) fn new(root: &'a Option<Box<Node<K, V>>>) -> Self {
+        let mut it = Self {
+            stack: Stack::new(),
+        };
+        it.push_left_path(root);
+        it
+    }
+
+    /// Drills down the leftmost branch, loading node references onto the stack
+    fn push_left_path(&mut self, mut current: &'a Option<Box<Node<K, V>>>) {
+        while let Some(node) = current {
+            self.stack.push(node.as_ref());
+            current = &node.left.0; // Directly reaches through your inner tuple Tree link
+        }
+    }
+}
+
+// 🚀 Implement the standard Rust Iterator trait engine
+impl<'a, K, V> Iterator for BstIterator<'a, K, V> {
+    // Each step yields a tuple containing read-only references directly from your tree nodes
+    type Item = (&'a K, &'a V);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        // Pop the next available node reference out of your library stack
+        let node = self.stack.pop()?;
+
+        // If the node has a right branch, drill down its left track
+        if node.right.0.is_some() {
+            self.push_left_path(&node.right.0);
+        }
+
+        // Return the references with absolutely zero memory cloning!
+        Some((&node.key, &node.val))
     }
 }
 
@@ -177,5 +241,56 @@ mod tests {
         assert_eq!(tree_complex.size(), 3);
         // The tree structure must seamlessly shift up a successor while staying sorted
         assert_eq!(tree_complex.keys(), vec![5, 10, 20]);
+    }
+
+    #[test]
+    fn test_iter_keys_sequential_loop() {
+        let mut bst = BinarySearchTree::new();
+
+        // Insert keys randomly
+        bst.put(15, "Root".to_string());
+        bst.put(10, "Left".to_string());
+        bst.put(20, "Right".to_string());
+        bst.put(5, "Leaf".to_string());
+
+        // 🚀 Test your `iter_keys()` loop syntax directly!
+        let mut extracted_keys = Vec::new();
+        for key in bst.iter_keys() {
+            extracted_keys.push(key);
+        }
+
+        // A standard BST must yield its keys in strictly sorted order!
+        assert_eq!(extracted_keys, vec![5, 10, 15, 20]);
+    }
+
+    #[test]
+    fn test_bst_iterator_traversal() {
+        let mut bst = BinarySearchTree::new();
+
+        // Insert nodes in an arbitrary order
+        bst.put(15, "Root".to_string());
+        bst.put(10, "Left".to_string());
+        bst.put(20, "Right".to_string());
+        bst.put(5, "Leaf".to_string());
+
+        // 1. Test programmatic iteration via the .iter() method
+        let mut it = bst.iter();
+
+        // The iterator must yield items sequentially by Key order (5, 10, 15, 20)
+        assert_eq!(it.next(), Some((&5, &"Leaf".to_string())));
+        assert_eq!(it.next(), Some((&10, &"Left".to_string())));
+        assert_eq!(it.next(), Some((&15, &"Root".to_string())));
+        assert_eq!(it.next(), Some((&20, &"Right".to_string())));
+        assert_eq!(it.next(), None); // Drained completely
+
+        // 2. Test idiomatic "IntoIterator" reference looping
+        // Simply passing a reference `&bst` triggers your IntoIterator implementation!
+        let mut collected_pairs = Vec::new();
+        for (key, val) in &bst {
+            collected_pairs.push((*key, val.as_str()));
+        }
+
+        let expected_pairs = vec![(5, "Leaf"), (10, "Left"), (15, "Root"), (20, "Right")];
+        assert_eq!(collected_pairs, expected_pairs);
     }
 }

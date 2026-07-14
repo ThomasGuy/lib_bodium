@@ -5,8 +5,8 @@ pub type Link<K, V> = Option<Box<Node<K, V>>>;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Node<K, V> {
-    pub(crate) key: K,
-    pub(crate) val: V,
+    pub key: K,
+    pub val: V,
     pub(crate) left: Tree<K, V>,
     pub(crate) right: Tree<K, V>,
     pub(crate) node_count: u32,

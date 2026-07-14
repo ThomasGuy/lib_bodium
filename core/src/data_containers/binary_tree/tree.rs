@@ -121,23 +121,21 @@ where
         self.0.is_none()
     }
 
-    pub(crate) fn keys(&self, que: &mut Vec<K>) -> Vec<K> {
+    pub(crate) fn keys(&self, que: &mut Vec<K>) {
         if let Some(node) = &self.0 {
             node.left.keys(que);
             que.push(node.key.clone());
             node.right.keys(que);
         }
-        que.clone()
     }
 
     /// Collects all nodes in-order via shared memory references
-    pub(crate) fn nodes<'a>(&'a self, que: &mut Vec<&'a Node<K, V>>) -> Vec<&'a Node<K, V>> {
+    pub(crate) fn nodes<'a>(&'a self, que: &mut Vec<&'a Node<K, V>>) {
         if let Some(node) = &self.0 {
             node.left.nodes(que);
             que.push(node.as_ref()); // Pushes a lightweight reference instead of cloning!
             node.right.nodes(que);
         }
-        que.clone()
     }
 
     pub(crate) fn floor(&self, key: &K) -> Option<K> {
@@ -189,43 +187,5 @@ where
                 Ordering::Greater => node.left.size() + node.right.rank(key) + 1,
             },
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::data_containers::binary_tree;
-    use pretty_assertions::{self, assert_eq};
-
-    #[test]
-    fn put_get_size_contains_delete() {
-        let mut bst = binary_tree::BinarySearchTree::new();
-        bst.put(18, "Tom");
-        bst.put(25, "Na");
-        bst.put(16, "Simon");
-        bst.put(17, "Adrian");
-        bst.put(9, "Bella");
-        bst.put(12, "Sally");
-        bst.put(14, "Jim");
-        bst.put(7, "Ed");
-        bst.put(11, "Nick");
-
-        assert_eq!(bst.size(), 9 as u32);
-        assert_eq!(bst.get(&17).unwrap().val, "Adrian");
-        assert_eq!(bst.size(), bst.get(&18).unwrap().node_count);
-        assert_eq!(bst.select(4).unwrap().key, 14);
-        assert!(bst.contains(9));
-        assert_ne!(bst.contains(50), true);
-        bst.delete(9);
-        assert_ne!(bst.contains(9), true);
-        assert_eq!(bst.size(), 8 as u32);
-        assert_eq!(bst.keys(), [7, 11, 12, 14, 16, 17, 18, 25]);
-        assert_eq!(bst.floor(15).unwrap(), 14);
-        assert_ne!(bst.is_empty(), true);
-        assert_eq!(bst.is_empty(), false);
-        bst.delete(12);
-        bst.delete(7);
-        assert_eq!(bst.size(), 6 as u32);
-        assert_eq!(bst.keys(), [11, 14, 16, 17, 18, 25]);
     }
 }

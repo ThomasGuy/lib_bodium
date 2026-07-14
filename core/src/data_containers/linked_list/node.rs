@@ -3,7 +3,7 @@ use super::Link;
 use std::fmt::Display;
 
 #[derive(Debug, Clone)]
-pub(crate) struct Node<T: Display> {
+pub(crate) struct Node<T> {
     pub(crate) item: T,
     pub(crate) next: Link<T>,
 }
