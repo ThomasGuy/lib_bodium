@@ -2,7 +2,7 @@ use super::node::{Link, Node};
 use std::cmp::Ordering;
 use std::fmt::Display;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Tree<K, V>(pub(crate) Link<K, V>);
 
 impl<K, V> Tree<K, V>
@@ -131,14 +131,14 @@ where
     }
 
     /// Collects all nodes in-order via shared memory references
-    // pub(crate) fn nodes<'a>(&'a self, que: &mut Vec<&'a Node<K, V>>) -> Vec<&'a Node<K, V>> {
-    //     if let Some(node) = &self.0 {
-    //         node.left.nodes(que);
-    //         que.push(node.as_ref()); // Pushes a lightweight reference instead of cloning!
-    //         node.right.nodes(que);
-    //     }
-    //     que.clone()
-    // }
+    pub(crate) fn nodes<'a>(&'a self, que: &mut Vec<&'a Node<K, V>>) -> Vec<&'a Node<K, V>> {
+        if let Some(node) = &self.0 {
+            node.left.nodes(que);
+            que.push(node.as_ref()); // Pushes a lightweight reference instead of cloning!
+            node.right.nodes(que);
+        }
+        que.clone()
+    }
 
     pub(crate) fn floor(&self, key: &K) -> Option<K> {
         match &self.0 {
@@ -194,12 +194,12 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::data_containers::binary_st;
+    use crate::data_containers::binary_tree;
     use pretty_assertions::{self, assert_eq};
 
     #[test]
     fn put_get_size_contains_delete() {
-        let mut bst = binary_st::BinarySearchTree::new();
+        let mut bst = binary_tree::BinarySearchTree::new();
         bst.put(18, "Tom");
         bst.put(25, "Na");
         bst.put(16, "Simon");

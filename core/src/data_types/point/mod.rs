@@ -1,7 +1,20 @@
+use std::num::ParseIntError;
+use std::str::FromStr;
+use thiserror::Error;
+
 pub mod slope_order;
 
 use slope_order::SlopeOrder;
 use std::{cmp::Ordering, fmt::Display};
+
+/// Custom error type to handle failed text-to-point transformations
+#[derive(Error, Debug)]
+pub enum PointParseError {
+    #[error("Missing coordinate separator: Expected format 'X,Y'")]
+    MissingSeparator,
+    #[error("Failed to parse integer coordinate: {0}")]
+    InvalidCoordinate(#[from] ParseIntError),
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Point {
@@ -18,6 +31,21 @@ pub struct Point {
 impl Point {
     pub fn new(x: i32, y: i32) -> Self {
         Self { x, y }
+    }
+}
+
+/// implement [FromStr] enables serialization like serde
+impl FromStr for Point {
+    type Err = PointParseError;
+
+    /// Automatically converts a text coordinate token like "5, 12" into a Point struct
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let (x_str, y_str) = s.split_once(',').ok_or(PointParseError::MissingSeparator)?;
+
+        let x = x_str.trim().parse::<i32>()?;
+        let y = y_str.trim().parse::<i32>()?;
+
+        Ok(Point::new(x, y))
     }
 }
 
@@ -49,6 +77,10 @@ impl Ord for Point {
 }
 
 impl Point {
+    pub fn to_f64(&self) -> (f64, f64) {
+        (self.x as f64, self.y as f64)
+    }
+
     /**
      * Returns the slope between this point and the argument point.
      * Formally, if the two points are (x0, y0) and (x1, y1), then the slope

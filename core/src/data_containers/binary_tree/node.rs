@@ -1,9 +1,9 @@
-use crate::data_containers::binary_st::tree::Tree;
+use crate::data_containers::binary_tree::tree::Tree;
 use std::fmt::Display;
 
 pub type Link<K, V> = Option<Box<Node<K, V>>>;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Node<K, V> {
     pub(crate) key: K,
     pub(crate) val: V,
