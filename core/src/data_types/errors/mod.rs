@@ -37,6 +37,10 @@ pub enum KvError {
     /// Thrown when the file stream finishes prematurely or contains no valid rows
     #[error("Data seeding failure: The provided data stream contains no valid records")]
     NoData,
+
+    /// Captures and bubbles up plotting rendering backend failures safely
+    #[error("Visualisation error: Graph plotting subsystem failed: {0}")]
+    Plot(String),
 }
 
 #[derive(Error, Debug)]

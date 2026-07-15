@@ -1,5 +1,6 @@
 pub mod bag;
 pub mod binary_tree;
+pub mod digraph;
 pub mod graph;
 pub(crate) mod linked_list;
 pub mod stack;

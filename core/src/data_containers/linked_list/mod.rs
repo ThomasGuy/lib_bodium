@@ -32,13 +32,13 @@ impl<T> LinkedList<T> {
         self.head.is_none()
     }
 
-    pub fn peek(&self) -> Option<&T> {
-        self.head.as_ref().map(|node| &node.item)
-    }
+    // pub fn peek(&self) -> Option<&T> {
+    //     self.head.as_ref().map(|node| &node.item)
+    // }
 
-    pub fn peek_mut(&mut self) -> Option<&mut T> {
-        self.head.as_mut().map(|node| &mut node.item)
-    }
+    // pub fn peek_mut(&mut self) -> Option<&mut T> {
+    //     self.head.as_mut().map(|node| &mut node.item)
+    // }
 
     pub fn into_iter(self) -> IntoIter<T> {
         IntoIter(self)

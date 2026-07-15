@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 compare = "0.1.0"
+plotters = "0.3.7"
 pretty_assertions = "1.4.1"
 rand = "0.10.2"
 thiserror = "2.0.17"
