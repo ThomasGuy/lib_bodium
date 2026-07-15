@@ -138,6 +138,57 @@ mod tests {
         let mut iter = (&stack).into_iter();
         assert_eq!(iter.next(), Some(&"B"));
         assert_eq!(iter.next(), Some(&"A"));
+    }
+
+    #[test]
+    fn iter() {
+        let mut list = Stack::<i32>::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+
+        let mut iter = list.iter();
+        assert_eq!(iter.next(), Some(&3));
+        assert_eq!(iter.next(), Some(&2));
+        assert_eq!(iter.next(), Some(&1));
         assert_eq!(iter.next(), None);
+
+        assert_eq!(list.size(), 3 as u32);
+    }
+
+    #[test]
+    fn iter_mut() {
+        let mut list = Stack::<i32>::new();
+        list.push(1);
+        list.push(2);
+        list.push(3);
+
+        let mut iter = list.iter_mut();
+        assert_eq!(iter.next(), Some(&mut 3));
+        assert_eq!(iter.next(), Some(&mut 2));
+        assert_eq!(iter.next(), Some(&mut 1));
+        assert_eq!(iter.next(), None);
+
+        assert_eq!(list.size(), 3 as u32);
+    }
+
+    #[test]
+    fn implicit_reference_into_iter() {
+        let mut list = Stack::<i32>::new();
+        list.push(10);
+        list.push(20);
+        list.push(40);
+        list.push(70);
+
+        // Verifies that `IntoIterator` for `&Bag<T>` allows multiple reference loops
+        let mut sum = 0;
+        for val in &list {
+            // Implicitly calls list.into_iter() on &Bag
+            sum += val;
+        }
+        assert_eq!(sum, 140);
+
+        // This second loop is only possible because the first loop didn't consume `list`!
+        assert_eq!(list.size(), 4);
     }
 }

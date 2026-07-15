@@ -45,7 +45,7 @@ where
     }
 
     // 🚀 Returns a clean reference instead of forcing a deep clone
-    fn _min_ref(&self) -> Option<&Node<K, V>> {
+    pub(crate) fn min_ref(&self) -> Option<&Node<K, V>> {
         let mut current = self;
         while let Some(node) = &current.0 {
             if node.left.0.is_none() {
@@ -126,6 +126,14 @@ where
             node.left.keys(que);
             que.push(node.key.clone());
             node.right.keys(que);
+        }
+    }
+
+    pub(crate) fn keys_ref<'a>(&'a self, que: &mut Vec<&'a K>) {
+        if let Some(node) = &self.0 {
+            node.left.keys_ref(que);
+            que.push(&node.key);
+            node.right.keys_ref(que);
         }
     }
 

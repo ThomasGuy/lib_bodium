@@ -37,6 +37,10 @@ where
         self.root.get(key)
     }
 
+    pub fn min(&self) -> Option<&Node<K, V>> {
+        self.root.min_ref()
+    }
+
     pub fn delete(&mut self, key: K) {
         // Pass as reference matching your optimized Tree signature
         self.root.remove(&key);
@@ -67,8 +71,18 @@ where
         queue
     }
 
-    pub fn iter_keys(&self) -> std::vec::IntoIter<K> {
+    pub fn into_iter_keys(&self) -> std::vec::IntoIter<K> {
         self.keys().into_iter()
+    }
+
+    pub fn keys_ref(&self) -> Vec<&K> {
+        let mut queue: Vec<&K> = Vec::new();
+        self.root.keys_ref(&mut queue);
+        queue
+    }
+    /// 🚀 Lazily streams references directly from your tree nodes
+    pub fn iter_keys(&self) -> std::vec::IntoIter<&K> {
+        self.keys_ref().into_iter()
     }
 
     pub fn floor(&self, key: K) -> Option<K> {
@@ -244,7 +258,7 @@ mod tests {
     }
 
     #[test]
-    fn test_iter_keys_sequential_loop() {
+    fn test_into_iter_keys_sequential_loop() {
         let mut bst = BinarySearchTree::new();
 
         // Insert keys randomly
@@ -255,12 +269,50 @@ mod tests {
 
         // 🚀 Test your `iter_keys()` loop syntax directly!
         let mut extracted_keys = Vec::new();
-        for key in bst.iter_keys() {
+        for key in bst.into_iter_keys() {
             extracted_keys.push(key);
         }
 
         // A standard BST must yield its keys in strictly sorted order!
         assert_eq!(extracted_keys, vec![5, 10, 15, 20]);
+    }
+
+    #[test]
+    fn test_iter_reference_key_iterator() {
+        let mut bst = BinarySearchTree::new();
+
+        // 1. Seed the tree in an unsorted fashion
+        bst.put(42, "Forty-Two".to_string());
+        bst.put(12, "Twelve".to_string());
+        bst.put(88, "Eighty-Eight".to_string());
+        bst.put(5, "Five".to_string());
+
+        // 2. Instantiate your zero-copy reference key iterator
+        let mut key_iter = bst.iter_keys();
+
+        // 3. Verify it yields exact &K reference types in strict sorted sequence
+        // (We compare against borrowed integers to match the &K type constraint)
+        assert_eq!(key_iter.next(), Some(&5));
+        assert_eq!(key_iter.next(), Some(&12));
+        assert_eq!(key_iter.next(), Some(&42));
+        assert_eq!(key_iter.next(), Some(&88));
+        assert_eq!(key_iter.next(), None); // Ensure it drains completely
+
+        // 4. Test it inside a standard consumption loop to guarantee standard ergonomics
+        let mut verified_count = 0;
+        let mut last_key = 0;
+
+        for &key in bst.iter_keys() {
+            // Destructure the &K reference to get the copyable u32 primitive
+            assert!(
+                key > last_key,
+                "BST keys must be yielded in ascending sorted order!"
+            );
+            last_key = key;
+            verified_count += 1;
+        }
+
+        assert_eq!(verified_count, 4);
     }
 
     #[test]

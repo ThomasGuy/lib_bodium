@@ -116,6 +116,8 @@ mod tests {
         assert_eq!(iter.next(), Some(&2));
         assert_eq!(iter.next(), Some(&1));
         assert_eq!(iter.next(), None);
+
+        assert_eq!(list.size(), 3 as u32);
     }
 
     #[test]
@@ -130,6 +132,8 @@ mod tests {
         assert_eq!(iter.next(), Some(&mut 2));
         assert_eq!(iter.next(), Some(&mut 1));
         assert_eq!(iter.next(), None);
+
+        assert_eq!(list.size(), 3 as u32);
     }
 
     #[test]
@@ -137,6 +141,8 @@ mod tests {
         let mut list = Bag::<i32>::new();
         list.add(10);
         list.add(20);
+        list.add(40);
+        list.add(70);
 
         // Verifies that `IntoIterator` for `&Bag<T>` allows multiple reference loops
         let mut sum = 0;
@@ -144,9 +150,9 @@ mod tests {
             // Implicitly calls list.into_iter() on &Bag
             sum += val;
         }
-        assert_eq!(sum, 30);
+        assert_eq!(sum, 140);
 
         // This second loop is only possible because the first loop didn't consume `list`!
-        assert_eq!(list.size(), 2);
+        assert_eq!(list.size(), 4);
     }
 }

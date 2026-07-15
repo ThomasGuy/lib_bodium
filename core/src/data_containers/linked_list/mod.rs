@@ -32,13 +32,13 @@ impl<T> LinkedList<T> {
         self.head.is_none()
     }
 
-    // pub fn peek(&self) -> Option<&T> {
-    //     self.head.as_ref().map(|node| &node.item)
-    // }
+    pub fn peek(&self) -> Option<&T> {
+        self.head.as_ref().map(|node| &node.item)
+    }
 
-    // pub fn peek_mut(&mut self) -> Option<&mut T> {
-    //     self.head.as_mut().map(|node| &mut node.item)
-    // }
+    pub fn peek_mut(&mut self) -> Option<&mut T> {
+        self.head.as_mut().map(|node| &mut node.item)
+    }
 
     pub fn into_iter(self) -> IntoIter<T> {
         IntoIter(self)
@@ -57,22 +57,8 @@ impl<T> LinkedList<T> {
     }
 }
 
-impl<T> Drop for LinkedList<T> {
-    fn drop(&mut self) {
-        let mut cur_link = self.head.take();
-
-        while let Some(mut boxed_node) = cur_link {
-            cur_link = boxed_node.next.take();
-        }
-    }
-}
-
-impl<T> Default for LinkedList<T> {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
+/// ----------- Iterators ----------------
+///
 pub struct IntoIter<T>(LinkedList<T>);
 
 impl<T> Iterator for IntoIter<T> {
@@ -111,6 +97,27 @@ impl<'a, T> Iterator for IterMut<'a, T> {
         })
     }
 }
+
+// ------------------------------------------ //
+//--------------------------------------------//
+
+impl<T> Default for LinkedList<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<T> Drop for LinkedList<T> {
+    fn drop(&mut self) {
+        let mut cur_link = self.head.take();
+
+        while let Some(mut boxed_node) = cur_link {
+            cur_link = boxed_node.next.take();
+        }
+    }
+}
+
+//---------------------------------------------//
 
 #[cfg(test)]
 mod test {

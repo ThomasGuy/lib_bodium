@@ -26,8 +26,6 @@ impl<K, V> Seeder<K, V> {
     /// Randomizes the sequence of collected items to prevent tree clustering/degradation.
     pub fn shuffle(&mut self) {
         let mut rng = rand::rng();
-        // 🚀 CORRECT SYNTAX: Call shuffle directly ON the vector slice,
-        // passing a mutable reference to your random number generator!
         self.pairs.shuffle(&mut rng);
     }
 
@@ -38,6 +36,10 @@ impl<K, V> Seeder<K, V> {
 
     pub fn len(&self) -> usize {
         self.pairs.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 }
 
@@ -98,5 +100,14 @@ where
 impl<K, V> Default for Seeder<K, V> {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+impl<K, V> IntoIterator for Seeder<K, V> {
+    type Item = (K, V);
+    type IntoIter = std::vec::IntoIter<(K, V)>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.into_pairs()
     }
 }
