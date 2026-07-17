@@ -31,7 +31,7 @@ where
         self.root.put(&key, &val);
     }
 
-    // 🚀 Fixed: Returns a read-only reference directly from memory,
+    // Returns a read-only reference directly from memory,
     // saving immense CPU cycles by skipping deep structural clones!
     pub fn get(&self, key: &K) -> Option<&Node<K, V>> {
         self.root.get(key)

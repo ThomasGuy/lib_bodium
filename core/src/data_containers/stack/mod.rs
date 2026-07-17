@@ -1,7 +1,7 @@
 use crate::data_containers::linked_list::{IntoIter, Iter, IterMut, LinkedList};
 use std::fmt::Display;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Stack<T> {
     root: LinkedList<T>,
     size: u32,

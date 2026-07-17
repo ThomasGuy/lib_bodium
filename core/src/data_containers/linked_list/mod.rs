@@ -1,7 +1,7 @@
 pub(crate) mod node;
 use node::Node;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct LinkedList<T> {
     head: Link<T>,
 }

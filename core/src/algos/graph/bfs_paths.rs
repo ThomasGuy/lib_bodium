@@ -4,16 +4,16 @@ use std::fmt::Display;
 
 pub struct BreadthFirstPaths {
     marked: Vec<bool>,
-    edge_to: Vec<i32>,
-    source: i32,
-    total_vertices: i32,
+    edge_to: Vec<Option<usize>>,
+    source: usize,
+    total_vertices: usize,
 }
 
 impl BreadthFirstPaths {
-    pub fn new(g: &Graph, source: i32) -> Self {
+    pub fn new(g: &Graph, source: usize) -> Self {
         Self {
-            marked: vec![false; g.vertex() as usize],
-            edge_to: vec![-1; g.vertex() as usize],
+            marked: vec![false; g.vertex()],
+            edge_to: vec![None; g.vertex()],
             source,
             total_vertices: g.vertex(),
         }
@@ -23,37 +23,43 @@ impl BreadthFirstPaths {
         self.bfs(g, self.source);
     }
 
-    fn bfs(&mut self, g: &Graph, s: i32) {
-        let mut queue = VecDeque::<i32>::new();
-        self.marked[s as usize] = true;
+    fn bfs(&mut self, g: &Graph, s: usize) {
+        let mut queue = VecDeque::<usize>::new();
+        self.marked[s] = true;
         queue.push_back(s);
 
         while let Some(v) = queue.pop_front() {
             for w in g.adj(v) {
-                if !self.marked[*w as usize] {
-                    self.edge_to[*w as usize] = v;
-                    self.marked[*w as usize] = true;
+                if !self.marked[*w] {
+                    self.edge_to[*w] = Some(v);
+                    self.marked[*w] = true;
                     queue.push_back(*w);
                 }
             }
         }
     }
 
-    pub fn has_path_to(&self, v: i32) -> bool {
-        self.marked[v as usize]
+    pub fn has_path_to(&self, v: usize) -> bool {
+        self.marked[v]
     }
 
-    pub fn path_to(&self, v: i32) -> Option<Stack<i32>> {
+    pub fn path_to(&self, v: usize) -> Option<Stack<usize>> {
         if !self.has_path_to(v) {
             return None;
         }
-        let mut path = Stack::<i32>::new();
-        let mut x = v;
-        while x != self.source {
-            path.push(x);
-            x = self.edge_to[x as usize];
+
+        let mut path = Stack::new();
+        let mut current = v;
+
+        // 🚀 Walk backwards along the parent links until we hit the source vertex
+        // (The source vertex remains `None` in the edge_to array!)
+        while let Some(parent) = self.edge_to[current] {
+            path.push(current);
+            current = parent; // Step back to the next parent index
         }
-        path.push(self.source);
+
+        // Push the final source vertex onto the stack
+        path.push(current);
         Some(path)
     }
 }

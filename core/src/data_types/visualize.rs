@@ -151,7 +151,7 @@ where
             )))
             .map_err(|e| KvError::Plot(format!("Failed to draw node circle: {:?}", e)))?;
 
-        // Draw text label centered inside the blue circle
+        // 6. Draw text label centered inside the blue circle
         chart
             .draw_series(std::iter::once(Text::new(
                 node.label.clone(),
@@ -163,5 +163,6 @@ where
 
     root.present()
         .map_err(|e| KvError::Plot(format!("Failed to write PNG file to storage: {:?}", e)))?;
+
     Ok(())
 }
