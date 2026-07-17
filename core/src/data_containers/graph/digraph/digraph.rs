@@ -1,4 +1,4 @@
-use super::GraphError;
+use crate::data_containers::graph::GraphError;
 use crate::data_containers::{Bag, Stack};
 
 use super::directed_cycle;
