@@ -58,10 +58,6 @@ impl DirectedCycle {
         self.on_stack[v] = false;
     }
 
-    // pub(super) fn has_cycle(&self) -> bool {
-    //     self.cycle.is_some()
-    // }
-
     pub(super) fn cycle(&self) -> Option<&Stack<usize>> {
         self.cycle.as_ref()
     }
