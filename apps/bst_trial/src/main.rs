@@ -1,10 +1,10 @@
-pub mod config;
-
-use crate::config::{Config, DataFormat};
 use anyhow;
 use bodium_core::data_containers::BinarySearchTree;
 use bodium_core::data_types::{Point, Seeder, visualize};
 use std::{env, process};
+
+pub mod config;
+use crate::config::{Config, DataFormat};
 
 fn main() {
     let config = Config::build(env::args()).unwrap_or_else(|err| {

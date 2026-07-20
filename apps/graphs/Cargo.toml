@@ -2,12 +2,12 @@
 name = "graphs"
 version = "0.1.0"
 edition = "2024"
-default-run = "main_app"
+default-run = "graph"
 
 [[bin]]
-name = "main_app"
+name = "graph"
 path = "src/main.rs"
 
 [dependencies]
-anyhow = "1.0.103"
+anyhow = { workspace = true }
 bodium_core = { workspace = true }

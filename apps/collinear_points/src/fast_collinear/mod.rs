@@ -1,10 +1,10 @@
-pub mod line_segment;
-
 use anyhow::{Result, bail};
-use bodium_core::data_types::Point;
 use compare::Compare;
-use line_segment::LineSegment;
 use std::cmp::Ordering;
+
+use bodium_core::data_types::Point;
+pub mod line_segment;
+use line_segment::LineSegment;
 
 #[derive(Debug)]
 pub struct FastCollinear {
