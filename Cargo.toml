@@ -2,4 +2,10 @@
 resolver = "3"
 members = [
   "core",
+  "apps/bst_trial",
+  "apps/collinear_points",
+  "apps/graphs",
 ]
+
+[workspace.dependencies]
+bodium_core = { path = "core", version = "0.2.0" }

@@ -1,0 +1,8 @@
+[package]
+name = "bst_trial"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.103"
+bodium_core = { workspace = true }

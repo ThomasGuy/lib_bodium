@@ -1,0 +1,13 @@
+[package]
+name = "graphs"
+version = "0.1.0"
+edition = "2024"
+default-run = "main_app"
+
+[[bin]]
+name = "main_app"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0.103"
+bodium_core = { workspace = true }

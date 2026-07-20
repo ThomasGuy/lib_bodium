@@ -1,4 +1,5 @@
 use crate::data_containers::BinarySearchTree;
+use crate::data_containers::binary_tree::Node;
 use crate::data_types::KvError;
 use plotters::prelude::*;
 
@@ -27,7 +28,7 @@ where
 
     // 1. Fetch the in-order sorted list of nodes
     let nodes_list = bst.nodes();
-    let total_elements = nodes_list.len();
+    let total_nodes = nodes_list.len();
 
     if nodes_list.is_empty() {
         return Err(KvError::NoData);
@@ -37,75 +38,9 @@ where
     let mut visual_lines: Vec<VisualLine> = Vec::new();
     let mut max_depth = 0.0;
 
-    // 2. 🚀 Divide-and-Conquer Layout Engine:
-    // Recursively simulates the tree structure to find exact X, Y coordinates and lines.
-    fn compute_layout<K: Ord + std::fmt::Display, V>(
-        nodes: &[&crate::data_containers::binary_tree::node::Node<K, V>],
-        global_list: &[&crate::data_containers::binary_tree::node::Node<K, V>],
-        depth: f64,
-        parent_coord: Option<(f64, f64)>,
-        visual_nodes: &mut Vec<VisualNode>,
-        visual_lines: &mut Vec<VisualLine>,
-        max_depth: &mut f64,
-    ) {
-        if nodes.is_empty() {
-            return;
-        }
-
-        // The middle element of the sorted list is ALWAYS the root of this subtree
-        let mid_idx = nodes.len() / 2;
-        let current_node = nodes[mid_idx];
-
-        // Find where this node physically sits in the global sorted list to get its stable X coordinate
-        let global_x = global_list
-            .iter()
-            .position(|&n| n.key == current_node.key)
-            .unwrap() as f64;
-
-        let current_coord = (global_x, depth);
-        if depth > *max_depth {
-            *max_depth = depth;
-        }
-
-        // Save the node for drawing
-        visual_nodes.push(VisualNode {
-            x: global_x,
-            y: depth,
-            label: format!("{}", current_node.key),
-        });
-
-        // 🚀 Add branch connection line back up to the parent node if it exists
-        if let Some(parent) = parent_coord {
-            visual_lines.push(VisualLine {
-                start: parent,
-                end: current_coord,
-            });
-        }
-
-        // Recursively calculate the left and right subtrees
-        compute_layout(
-            &nodes[..mid_idx],
-            global_list,
-            depth + 1.0,
-            Some(current_coord),
-            visual_nodes,
-            visual_lines,
-            max_depth,
-        );
-        compute_layout(
-            &nodes[mid_idx + 1..],
-            global_list,
-            depth + 1.0,
-            Some(current_coord),
-            visual_nodes,
-            visual_lines,
-            max_depth,
-        );
-    }
-
     // Run the layout calculation engine starting at depth 0 without a parent coordinate
     compute_layout(
-        &nodes_list,
+        bst.root_node(),
         &nodes_list,
         0.0,
         None,
@@ -122,7 +57,7 @@ where
         )
         .margin(40)
         // Reverse Y-axis (max_depth + 0.5 down to -0.5) so root is at the absolute top
-        .build_cartesian_2d(-0.5..(total_elements as f64 - 0.5), (max_depth + 0.5)..-0.5)
+        .build_cartesian_2d(-0.5..(total_nodes as f64 - 0.5), (max_depth + 0.5)..-0.5)
         .map_err(|e| KvError::Plot(format!("Failed to build chart context: {:?}", e)))?;
 
     // Turn off grid paper background
@@ -146,17 +81,27 @@ where
         chart
             .draw_series(std::iter::once(Circle::new(
                 (node.x, node.y),
-                18,
+                12,
                 BLUE.filled(),
             )))
             .map_err(|e| KvError::Plot(format!("Failed to draw node circle: {:?}", e)))?;
 
-        // 6. Draw text label centered inside the blue circle
+        // Center the text layout regardless of digit count
+        use plotters::style::text_anchor::{HPos, Pos, VPos};
+        let anchor_pos = Pos::new(HPos::Center, VPos::Center);
+
+        let text_style = ("sans-serif", 15)
+            .into_font()
+            .color(&WHITE)
+            // Use TextAlignment to handle layout dynamically
+            .pos(anchor_pos);
+
+        // Draw text label centered inside the blue circle
         chart
             .draw_series(std::iter::once(Text::new(
                 node.label.clone(),
-                (node.x - 0.15, node.y - 0.05),
-                ("sans-serif", 15).into_font().color(&WHITE),
+                (node.x, node.y),
+                text_style,
             )))
             .map_err(|e| KvError::Plot(format!("Failed to render text labels: {:?}", e)))?;
     }
@@ -165,4 +110,69 @@ where
         .map_err(|e| KvError::Plot(format!("Failed to write PNG file to storage: {:?}", e)))?;
 
     Ok(())
+}
+
+// 🚀 True structural layout engine:
+// Recursively traverses the actual BST structure while using the global sorted list for X coordinates.
+fn compute_layout<K: Ord + std::fmt::Display, V>(
+    current_node: Option<&Node<K, V>>,
+    global_list: &[&Node<K, V>],
+    depth: f64,
+    parent_coord: Option<(f64, f64)>,
+    visual_nodes: &mut Vec<VisualNode>,
+    visual_lines: &mut Vec<VisualLine>,
+    max_depth: &mut f64,
+) {
+    // 1. Base case: if the pointer is empty, stop traversing
+    let Some(node) = current_node else {
+        return;
+    };
+
+    // 2. Find where this node physically sits in the global sorted list to get its stable X coordinate
+    let global_x = global_list
+        .iter()
+        .position(|&n| std::ptr::eq(n, node)) // Using ptr::eq prevents key collision issues
+        .unwrap() as f64;
+
+    let current_coord = (global_x, depth);
+
+    if depth > *max_depth {
+        *max_depth = depth;
+    }
+
+    // 3. Save the node for drawing
+    visual_nodes.push(VisualNode {
+        x: global_x,
+        y: depth,
+        label: format!("{}", node.key),
+    });
+
+    // 4. Add branch connection line back up to the parent node
+    if let Some(parent) = parent_coord {
+        visual_lines.push(VisualLine {
+            start: parent,
+            end: current_coord,
+        });
+    }
+
+    // 5. Recursively follow the ACTUAL tree pointers, not array slices
+    compute_layout(
+        node.left.0.as_deref(), // Assumes left is Option<Box<Node<K, V>>> or similar
+        global_list,
+        depth + 1.0,
+        Some(current_coord),
+        visual_nodes,
+        visual_lines,
+        max_depth,
+    );
+
+    compute_layout(
+        node.right.0.as_deref(),
+        global_list,
+        depth + 1.0,
+        Some(current_coord),
+        visual_nodes,
+        visual_lines,
+        max_depth,
+    );
 }

@@ -26,6 +26,10 @@ where
         BinarySearchTree { root: Tree::new() }
     }
 
+    pub fn root_node(&self) -> Option<&Node<K, V>> {
+        self.root.0.as_deref()
+    }
+
     pub fn put(&mut self, key: K, val: V) {
         // Pass as references matching your optimized Tree signature
         self.root.put(&key, &val);
@@ -99,6 +103,30 @@ where
         // Pass as reference matching your optimized Tree signature
         self.root.rank(&x)
     }
+
+    // Public entry point for your layout engine
+    // pub fn get_layout(&self) -> (Vec<VisualNode>, Vec<VisualLine>, f64) {
+    //     let mut visual_nodes = Vec::new();
+    //     let mut visual_lines = Vec::new();
+    //     let mut max_depth = 0.0;
+
+    //     // 1. Reuse your working in-order nodes traversal
+    //     let nodes_list = self.nodes();
+
+    //     // 2. Safely unpack and pass the root reference to your layout engine
+    //     compute_layout(
+    //         self.root.0.as_deref(),
+    //         &nodes_list,
+    //         0.0,
+    //         None,
+    //         &mut visual_nodes,
+    //         &mut visual_lines,
+    //         &mut max_depth,
+    //     );
+
+    //     // 3. Return everything needed to draw the tree
+    //     (visual_nodes, visual_lines, max_depth)
+    // }
 
     /// 🚀 Lazily yields pairs sequentially with true O(1) memory overhead.
     pub fn iter(&self) -> BstIterator<'_, K, V> {
