@@ -2,10 +2,9 @@
 resolver = "3"
 members = [
   "core",
-  "bin/bst_trial",
   "bin/collinear_points",
   "bin/graphs",
-  "bin/brt_try",
+  "bin/rbt_tree",
 ]
 
 [workspace.dependencies]

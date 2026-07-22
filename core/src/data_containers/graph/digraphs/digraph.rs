@@ -1,7 +1,8 @@
-use crate::data_containers::graph::GraphError;
-use crate::data_containers::{Bag, Stack};
+use std::fmt::Display;
 
 use super::directed_cycle;
+use crate::data_containers::graph::GraphError;
+use crate::data_containers::{Bag, Stack};
 
 /// A directed graph (or digraph) is a set of vertices and a collection of directed
 /// edges. Each directed edge connects an ordered pair of vertices.
@@ -101,6 +102,23 @@ impl DiGraph {
     pub fn cycle(&self) -> Option<Stack<usize>> {
         let detector = directed_cycle::DirectedCycle::new(self);
         detector.cycle().cloned()
+    }
+}
+
+// Zero-allocation string formatter streaming directly to the buffer output
+impl Display for DiGraph {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(
+            f,
+            "A Graph has {} vertices, {} edges",
+            self.vertex, self.edges
+        )?;
+        for v in 0..self.vertex {
+            write!(f, "{} : ", v)?;
+            // Automatically matches your Bag's Display format
+            writeln!(f, "{}", self.adj(v))?;
+        }
+        Ok(())
     }
 }
 

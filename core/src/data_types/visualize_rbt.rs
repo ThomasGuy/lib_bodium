@@ -78,7 +78,7 @@ where
     // 3. Setup the chart canvas window (Y-axis runs top-to-bottom for cascading trees)
     let mut chart = ChartBuilder::on(&root)
         .caption(
-            "Binary Search Tree Structural Visualization",
+            "Left leaning - Red Black balanced Tree",
             ("sans-serif", 30).into_font(),
         )
         .margin(40)

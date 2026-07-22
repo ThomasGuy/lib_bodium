@@ -1,6 +1,9 @@
+use std::fmt::Display;
+
 use crate::data_containers::{DiGraph, Stack};
 
 pub struct DirectedBFS {
+    total_vertices: usize,
     marked: Vec<bool>,
     edge_to: Vec<Option<usize>>,
     source_vertex: usize,
@@ -9,6 +12,7 @@ pub struct DirectedBFS {
 impl DirectedBFS {
     pub fn new(g: &DiGraph, source_vertex: usize) -> Self {
         let mut bfs = Self {
+            total_vertices: g.vertices(),
             marked: vec![false; g.vertices()],
             edge_to: vec![None; g.vertices()],
             source_vertex,
@@ -17,7 +21,7 @@ impl DirectedBFS {
         bfs
     }
 
-    fn build(&mut self, g: &DiGraph) {
+    pub fn build(&mut self, g: &DiGraph) {
         // Simple working local queue layout using Vec
         let mut queue = Vec::new();
 
@@ -55,5 +59,27 @@ impl DirectedBFS {
 
         path.push(current);
         Some(path)
+    }
+}
+
+impl Display for DirectedBFS {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        writeln!(f, "Shortest path from source vertex {}", self.source_vertex)?;
+        for v in 0..self.total_vertices {
+            if self.has_path_to(v) {
+                write!(f, "{} to {} : ", self.source_vertex, v)?;
+                if let Some(data) = self.path_to(v) {
+                    let mut iter = data.into_iter().peekable();
+                    while let Some(x) = iter.next() {
+                        write!(f, "{}", x)?;
+                        if iter.peek().is_some() {
+                            write!(f, "-")?;
+                        }
+                    }
+                }
+                writeln!(f)?;
+            }
+        }
+        Ok(())
     }
 }

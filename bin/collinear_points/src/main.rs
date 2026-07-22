@@ -1,4 +1,3 @@
-mod brute_force;
 mod fast_collinear;
 mod matplotlib;
 

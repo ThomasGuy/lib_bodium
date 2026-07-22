@@ -43,7 +43,7 @@ pub fn run_pipeline(config: Config) -> anyhow::Result<()> {
                 println!("ID: {:<5} -> Coordinates: {}", key, value);
             }
 
-            visualize_rbt::draw_tree("tree_view.png", &rbt, None)?;
+            visualize_rbt::draw_tree("brt_tree.png", &rbt, None)?;
         }
 
         // --- BRANCH B: GEOMETRIC FORMAT PROCESSING TRACK ---
@@ -69,7 +69,7 @@ pub fn run_pipeline(config: Config) -> anyhow::Result<()> {
                 rbt.size()
             );
 
-            visualize_rbt::draw_tree("tree_view.png", &rbt, None)?;
+            visualize_rbt::draw_tree("brt_tree.png", &rbt, None)?;
         }
     }
 

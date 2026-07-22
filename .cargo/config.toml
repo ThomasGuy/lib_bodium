@@ -1,3 +1,7 @@
 # .cargo/config.toml
 [alias]
-serve = "run --bin fast_collinear apps/collinear_points/data/input10.txt"
+collinear = "run --bin fast_collinear -- bin/collinear_points/data/input10.txt"
+rbt = "run --bin rbt_try -- bin/data/bst40.txt geo"
+graph = " run --bin graph -- bin/graphs/data/digraph9.txt 5"
+digraph = " run --bin digraph -- bin/graphs/data/digraph5.txt 12"
+bst = "run --bin bst_trial -- bin/data/bst40.txt geo"

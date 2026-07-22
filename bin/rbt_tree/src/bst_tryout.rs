@@ -70,11 +70,6 @@ pub fn run_pipeline(config: Config) -> anyhow::Result<()> {
                 bst.size()
             );
 
-            // Run your specialized spatial logic or plotters graphics routines here!
-            // for node in bst.nodes() {
-            //     println!("ID: {:<5} -> Coordinates: {}", node.key, node.val);
-            // }
-
             visualize_bst::draw_tree_graph("tree_view.png", &bst)?;
         }
     }

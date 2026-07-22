@@ -7,6 +7,10 @@ edition = "2024"
 name = "graph"
 path = "src/main.rs"
 
+[[bin]]
+name = "digraph"
+path = "src/digraph.rs"
+
 [dependencies]
 anyhow = { workspace = true }
 bodium_core = { workspace = true }
