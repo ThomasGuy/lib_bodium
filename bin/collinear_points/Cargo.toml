@@ -1,0 +1,18 @@
+[package]
+name = "collinear_points"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "fast_collinear"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+pretty_assertions = { workspace = true }
+plotters  = { workspace = true }
+compare = "0.1.0"
+show-image = { version = "0.14", features = ["image"] }
+image = "0.25"
+
+bodium_core = { workspace = true }

@@ -38,7 +38,7 @@ impl Point {
 impl FromStr for Point {
     type Err = PointParseError;
 
-    /// Automatically converts a text coordinate token like "5, 12" into a Point struct
+    /// Automatically converts a text coordinate token like "5,12" into a Point struct
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let (x_str, y_str) = s.split_once(',').ok_or(PointParseError::MissingSeparator)?;
 

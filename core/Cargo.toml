@@ -7,5 +7,5 @@ edition = "2024"
 compare = "0.1.0"
 plotters  = { workspace = true }
 pretty_assertions  = { workspace = true }
-rand = "0.10.2"
+rand = { workspace = true }
 thiserror = "2.0.17"

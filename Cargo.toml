@@ -2,13 +2,15 @@
 resolver = "3"
 members = [
   "core",
-  "apps/bst_trial",
-  "apps/collinear_points",
-  "apps/graphs",
+  "bin/bst_trial",
+  "bin/collinear_points",
+  "bin/graphs",
+  "bin/brt_try",
 ]
 
 [workspace.dependencies]
 anyhow = "1"
 plotters = "0.3"
 pretty_assertions = "1.4"
+rand = "0.10.2"
 bodium_core = { path = "core", version = "0.2.0" }

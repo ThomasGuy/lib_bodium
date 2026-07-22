@@ -1,0 +1,3 @@
+# .cargo/config.toml
+[alias]
+serve = "run --bin fast_collinear apps/collinear_points/data/input10.txt"
