@@ -8,4 +8,4 @@ compare = "0.1.0"
 plotters  = { workspace = true }
 pretty_assertions  = { workspace = true }
 rand = { workspace = true }
-thiserror = "2.0.17"
+thiserror = { workspace = true }

@@ -11,5 +11,6 @@ members = [
 anyhow = "1"
 plotters = "0.3"
 pretty_assertions = "1.4"
-rand = "0.10.2"
+rand = "0.10"
+thiserror = "2"
 bodium_core = { path = "core", version = "0.2.0" }

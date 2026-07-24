@@ -6,7 +6,7 @@ default-run = "rbt_try"
 
 [[bin]]
 name = "rbt_try"
-path = "src/main.rs"
+path = "src/rbt.rs"
 
 [[bin]]
 name = "bst_trial"

@@ -156,7 +156,7 @@ where
         }
         false
     }
-
+ 
     fn flip_colours(&mut self) {
         if let Some(ref mut node) = self.0 {
             node.colour = match node.colour {
