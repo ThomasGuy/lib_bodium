@@ -1,8 +1,8 @@
-use crate::data_containers::bag::Bag;
 use std::fmt::Display;
 use thiserror::Error;
 
 use super::cc;
+use crate::data_containers::bag::Bag;
 
 #[derive(Error, Debug)]
 #[non_exhaustive]

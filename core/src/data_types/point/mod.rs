@@ -1,11 +1,10 @@
 use std::num::ParseIntError;
 use std::str::FromStr;
+use std::{cmp::Ordering, fmt::Display};
 use thiserror::Error;
 
 pub mod slope_order;
-
 use slope_order::SlopeOrder;
-use std::{cmp::Ordering, fmt::Display};
 
 /// Custom error type to handle failed text-to-point transformations
 #[derive(Error, Debug)]

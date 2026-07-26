@@ -1,5 +1,8 @@
-use bodium_core::data_containers::RedBlackTree;
-use bodium_core::data_types::{Point, Seeder, visualize_rbt};
+use bodium_core::{
+    data_containers::RedBlackTree,
+    data_types::Point,
+    utils::{Seeder, visualize_rbt},
+};
 use std::{env, process};
 pub mod config;
 use crate::config::{Config, DataFormat};
@@ -69,7 +72,7 @@ pub fn run_pipeline(config: Config) -> anyhow::Result<()> {
                 rbt.size()
             );
 
-            visualize_rbt::draw_tree("brt_tree.png", &rbt, None)?;
+            visualize_rbt::draw_tree("brt_tree.png", &rbt, Some(&8))?;
         }
     }
 

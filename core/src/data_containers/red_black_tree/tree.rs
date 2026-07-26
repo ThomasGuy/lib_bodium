@@ -156,7 +156,7 @@ where
         }
         false
     }
- 
+
     fn flip_colours(&mut self) {
         if let Some(ref mut node) = self.0 {
             node.colour = match node.colour {
@@ -347,17 +347,17 @@ where
         }
     }
 
-    pub(crate) fn trace_search_path<'a>(&'a self, target: &K, queue: &mut Vec<&'a K>) {
+    pub(crate) fn trace_search_path<'a>(&'a self, target: &K, path: &mut Vec<&'a K>) {
         // 1. Base case: If we hit a None leaf, stop tracking
         let Some(node) = &self.0 else {
             return;
         };
         // 2. Record that we visited this node along the search path
-        queue.push(&node.key);
+        path.push(&node.key);
         // 3. Recurse down the appropriate branch based on binary search rules
         match target.cmp(&node.key) {
-            Ordering::Less => node.left.trace_search_path(target, queue),
-            Ordering::Greater => node.right.trace_search_path(target, queue),
+            Ordering::Less => node.left.trace_search_path(target, path),
+            Ordering::Greater => node.right.trace_search_path(target, path),
             Ordering::Equal => {} // Target found! Stop recursing and return up the stack
         }
     }

@@ -1,7 +1,8 @@
-use crate::data_types::InputError;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
+
+use crate::data_types::InputError;
 
 /// Stream data in from a .txt file and parse into an integer list
 #[derive(Default)]

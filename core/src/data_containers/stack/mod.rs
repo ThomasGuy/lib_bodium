@@ -1,5 +1,6 @@
-use crate::data_containers::linked_list::{IntoIter, Iter, IterMut, LinkedList};
 use std::fmt::Display;
+
+use crate::data_containers::linked_list::{IntoIter, Iter, IterMut, LinkedList};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Stack<T> {

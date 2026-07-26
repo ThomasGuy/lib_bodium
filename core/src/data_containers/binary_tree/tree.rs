@@ -1,6 +1,7 @@
-use super::node::{Link, Node};
 use std::cmp::Ordering;
 use std::fmt::Display;
+
+use super::node::{Link, Node};
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Tree<K, V>(pub(crate) Link<K, V>);

@@ -1,7 +1,6 @@
-// use crate::data_containers::linked_list::{IntoIter, Iter, IterMut, LinkedList};
-use super::linked_list::{IntoIter, Iter, IterMut, LinkedList};
 use std::fmt::Display;
-// use std::iter::IntoIterator;
+
+use super::linked_list::{IntoIter, Iter, IterMut, LinkedList};
 
 #[derive(Debug, Clone)]
 pub struct Bag<T> {

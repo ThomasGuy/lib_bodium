@@ -1,5 +1,6 @@
-use crate::data_containers::binary_tree::tree::Tree;
 use std::fmt::Display;
+
+use crate::data_containers::binary_tree::tree::Tree;
 
 pub type Link<K, V> = Option<Box<Node<K, V>>>;
 

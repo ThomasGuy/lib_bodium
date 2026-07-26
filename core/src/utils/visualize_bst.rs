@@ -1,7 +1,7 @@
-use crate::data_containers::BinarySearchTree;
-use crate::data_containers::binary_tree::Node;
-use crate::data_types::KvError;
 use plotters::prelude::*;
+
+use crate::data_containers::{BinarySearchTree, binary_tree::Node};
+use crate::data_types::KvError;
 
 /// Represents a node's calculated coordinates and its label for drawing
 struct VisualNode {

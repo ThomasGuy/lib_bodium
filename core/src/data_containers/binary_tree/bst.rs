@@ -1,6 +1,7 @@
+use std::fmt::Display;
+
 use super::{Node, Tree};
 use crate::Stack;
-use std::fmt::Display;
 
 #[derive(Debug)]
 pub struct BinarySearchTree<K, V> {

@@ -114,10 +114,15 @@ where
         self.root.check_black_height()
     }
 
-    pub fn trace_search_path(&self, target: &K) -> Vec<&K> {
-        let mut queue: Vec<&K> = Vec::new();
-        self.root.trace_search_path(target, &mut queue);
-        queue
+    pub fn trace_search_path(&self, target: &K) -> Option<Vec<&K>> {
+        let mut path: Vec<&K> = Vec::new();
+        self.root.trace_search_path(target, &mut path);
+        // Check if the last visited key matches the target
+        if path.last().is_some_and(|&key| key == target) {
+            Some(path)
+        } else {
+            None
+        }
     }
 }
 
@@ -188,6 +193,7 @@ mod tests {
     fn setup_test_tree() -> RedBlackTree<u32, String> {
         let mut tree = RedBlackTree::new();
         tree.insert(15, "Root".to_string());
+        tree.insert(50, "highest leaf".to_string());
         tree.insert(10, "Left Child".to_string());
         tree.insert(20, "Right Child".to_string());
         tree.insert(5, "Lowest leaf".to_string());
@@ -208,7 +214,7 @@ mod tests {
 
         // Read
         assert_eq!(tree.get(&42).unwrap().val, "Answer");
-        assert_eq!(tree.get(&99), None); // Missing key query
+        assert_eq!(tree.get(&9999), None); // Missing key query
 
         // Update
         tree.insert(42, "New Answer".to_string());
@@ -222,7 +228,7 @@ mod tests {
 
         // A standard BST must yield its keys in strictly sorted order!
         let sorted_keys = tree.keys();
-        assert_eq!(sorted_keys, vec![5, 10, 15, 20]);
+        assert_eq!(sorted_keys, vec![5, 10, 15, 20, 50]);
     }
 
     #[test]
@@ -237,7 +243,8 @@ mod tests {
         // Rank: count elements strictly smaller than the key
         assert_eq!(tree.rank(5), 0);
         assert_eq!(tree.rank(12), 2); // 5 and 10 are smaller than 12
-        assert_eq!(tree.rank(30), 4); // All elements are smaller than 30
+        assert_eq!(tree.rank(30), 4);
+        assert_eq!(tree.rank(60), 5);
     }
 
     #[test]
@@ -246,31 +253,9 @@ mod tests {
 
         assert_eq!(tree.floor(12), Some(10)); // Largest key <= 12
         assert_eq!(tree.floor(15), Some(15)); // Exact match boundary
-        assert_eq!(tree.floor(25), Some(20)); // Capped at absolute max
+        assert_eq!(tree.floor(55), Some(50)); // Capped at absolute max
         assert_eq!(tree.floor(3), None); // Below absolute minimum
     }
-
-    // #[test]
-    // fn test_hibbard_deletion_scenarios() {
-    //     let mut tree = setup_test_tree(); // Size: 4, Keys: 5, 10, 15, 20
-
-    //     // Scenario A: Delete a node with only one child (10 has child 5)
-    //     tree.delete(10);
-    //     assert_eq!(tree.size(), 3);
-    //     assert_eq!(tree.keys(), vec![5, 15, 20]);
-
-    //     // Scenario B: Delete a leaf node (5 has zero children)
-    //     tree.delete(5);
-    //     assert_eq!(tree.size(), 2);
-    //     assert_eq!(tree.keys(), vec![15, 20]);
-
-    //     // Scenario C: Delete root carrying two valid child subtrees (15)
-    //     let mut tree_complex = setup_test_tree();
-    //     tree_complex.delete(15);
-    //     assert_eq!(tree_complex.size(), 3);
-    //     // The tree structure must seamlessly shift up a successor while staying sorted
-    //     assert_eq!(tree_complex.keys(), vec![5, 10, 20]);
-    // }
 
     #[test]
     fn test_into_iter_keys_sequential_loop() {

@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 
-use crate::data_containers::red_black_tree::Node;
-use crate::data_containers::{Colour, RedBlackTree};
+use crate::data_containers::{Colour, RedBlackTree, red_black_tree::Node};
 use crate::data_types::KvError;
 use plotters::prelude::*;
 
@@ -57,14 +56,10 @@ where
     );
 
     // 🚀 Generate the trace path strings if a search_target exists
-    let path_strings: Vec<String> = if let Some(target) = search_target {
-        rbt.trace_search_path(target)
-            .iter()
-            .map(|key| format!("{}", key))
-            .collect()
-    } else {
-        Vec::new()
-    };
+    let path_strings: Vec<String> = search_target
+        .and_then(|target| rbt.trace_search_path(target)) // Returns Option<Vec<&K>>
+        .map(|path| path.iter().map(|key| format!("{}", key)).collect())
+        .unwrap_or_default(); // Returns empty Vec<String> if target or path is missing
 
     // 2. Map coordinates of highlighted nodes into a HashSet for O(1) coordinate matching
     // We convert the float coordinates to bits to safely store them in a HashSet
@@ -95,25 +90,23 @@ where
         .map_err(|e| KvError::Plot(format!("Failed to configure grid lines: {:?}", e)))?;
 
     // 4. 🚀 Draw the branch connection lines first (so they sit behind the circles)
-    for line in &visual_lines {
-        // A line is highlighted if its start AND end points match a highlighted node's coordinates
-        let start_key = (line.start.0.to_bits(), line.start.1.to_bits());
-        let end_key = (line.end.0.to_bits(), line.end.1.to_bits());
+    chart
+        .draw_series(visual_lines.iter().map(|line| {
+            // Determine if this specific line connects two highlighted nodes
+            let start_key = (line.start.0.to_bits(), line.start.1.to_bits());
+            let end_key = (line.end.0.to_bits(), line.end.1.to_bits());
 
-        let is_path_line =
-            highlighted_coords.contains(&start_key) && highlighted_coords.contains(&end_key);
+            let is_path_line =
+                highlighted_coords.contains(&start_key) && highlighted_coords.contains(&end_key);
 
-        let line_colour = if is_path_line { &CYAN } else { &BLACK };
+            let line_colour = if is_path_line { &CYAN } else { &BLACK };
 
-        chart
-            .draw_series(visual_lines.iter().map(|line| {
-                PathElement::new(
-                    vec![line.start, line.end],
-                    line_colour.mix(0.6).stroke_width(2),
-                )
-            }))
-            .map_err(|e| KvError::Plot(format!("Failed to draw branch paths: {:?}", e)))?;
-    }
+            PathElement::new(
+                vec![line.start, line.end],
+                line_colour.mix(0.6).stroke_width(2),
+            )
+        }))
+        .map_err(|e| KvError::Plot(format!("Failed to draw branch paths: {:?}", e)))?;
 
     // 5. Draw the node circles and white text labels
     for node in &visual_nodes {

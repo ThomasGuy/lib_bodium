@@ -1,6 +1,7 @@
-use crate::data_types::point::Point;
 use compare::Compare;
 use std::cmp::Ordering;
+
+use crate::data_types::point::Point;
 
 /*
 * Compares two points by the slope they make with self.origin.

@@ -1,7 +1,10 @@
-use bodium_core::data_containers::BinarySearchTree;
-use bodium_core::data_types::{Point, Seeder, visualize_bst};
 use std::{env, process};
 
+use bodium_core::{
+    data_containers::BinarySearchTree,
+    data_types::Point,
+    utils::{Seeder, visualize_bst},
+};
 pub mod config;
 use crate::config::{Config, DataFormat};
 
