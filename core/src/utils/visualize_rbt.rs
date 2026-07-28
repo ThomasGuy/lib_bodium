@@ -18,6 +18,7 @@ struct VisualLine {
     end: (f64, f64),
 }
 
+/// plot nodes in relative poitions and colours for a red black balanced tree
 pub fn draw_tree<K, V>(
     output_path: &str,
     rbt: &RedBlackTree<K, V>,
@@ -108,7 +109,7 @@ where
         }))
         .map_err(|e| KvError::Plot(format!("Failed to draw branch paths: {:?}", e)))?;
 
-    // 5. Draw the node circles and white text labels
+    // 5. Draw the node circles with text labels
     for node in &visual_nodes {
         let is_on_path = path_strings.contains(&node.label);
         let circle_colour = if is_on_path {

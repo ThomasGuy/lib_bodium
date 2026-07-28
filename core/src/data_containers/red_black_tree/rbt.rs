@@ -1,5 +1,5 @@
+use super::{Colour, Node, Tree};
 use crate::data_containers::Stack;
-use crate::data_containers::red_black_tree::{Colour, Node, Tree};
 use std::fmt::Display;
 
 #[derive(Debug)]

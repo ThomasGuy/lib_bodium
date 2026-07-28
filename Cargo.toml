@@ -9,6 +9,7 @@ members = [
 
 [workspace.dependencies]
 anyhow = "1"
+compare = "0.1"
 plotters = "0.3"
 pretty_assertions = "1.4"
 rand = "0.10"

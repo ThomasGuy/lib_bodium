@@ -16,6 +16,7 @@ struct VisualLine {
     end: (f64, f64),
 }
 
+/// plot nodes in relative poitions for a binary tree
 pub fn draw_tree_graph<K, V>(output_path: &str, bst: &BinarySearchTree<K, V>) -> Result<(), KvError>
 where
     K: Ord + Clone + std::fmt::Display,
