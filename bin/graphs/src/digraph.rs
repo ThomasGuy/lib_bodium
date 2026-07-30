@@ -28,9 +28,6 @@ fn run(config: Config) -> Result<()> {
     bfs.build(&graph);
 
     print!("{}", graph);
-    // for (id, list) in groups.iter().enumerate() {
-    //     println!("Component {id}: {list:?}");
-    // }
     println!();
     println!("Depth first search\n{}", dfs);
     println!("Breadth first search\n{}", bfs);

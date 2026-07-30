@@ -12,27 +12,25 @@ pub struct In {
 
 impl In {
     pub fn build<P: AsRef<Path>>(path: P) -> Result<Self, InputError> {
-        let path_buf = path.as_ref().to_path_buf();
-        let file = File::open(&path_buf).map_err(|e| InputError::Io {
-            path: path_buf.clone(),
+        let path = path.as_ref();
+        let file = File::open(path).map_err(|e| InputError::Io {
+            path: path.to_path_buf(),
             source: e,
         })?;
 
         let reader = BufReader::new(file);
-        let mut ints = vec![];
+        let mut ints = Vec::new();
 
-        for (index, line_result) in reader.lines().enumerate() {
-            let current_line = index + 1;
+        for line_result in reader.lines() {
             let line = line_result.map_err(|e| InputError::Io {
-                path: path_buf.clone(),
+                path: path.to_path_buf(),
                 source: e,
             })?;
 
             for part in line.split_whitespace() {
                 let parsed = part.parse::<i32>().map_err(|e| InputError::Parse {
                     text: part.to_string(),
-                    line: current_line,
-                    path: path_buf.clone(),
+                    path: path.to_path_buf(),
                     source: e,
                 })?;
                 ints.push(parsed);

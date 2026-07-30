@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-use super::{DiGraph, Graph, GraphError};
+use super::{Config, DiGraph, Graph, GraphError};
 use crate::data_types::{In, InputError};
 
 #[derive(Error, Debug)]
@@ -16,33 +16,31 @@ pub enum InError {
     RangeError(i32, i32),
     #[error("Vertex index cannot be negative")]
     NegativeInt,
-    #[error("Graph compilation aborted: The input data file contains an infinite cycle: {0:?}")]
+    #[error("Graph compilation aborted: The input data file contains an infinite cycle: \n{0:?}")]
     CyclicDeadlock(crate::data_containers::Stack<usize>),
 }
 
 pub fn build_graph(config: &Config) -> Result<Graph, InError> {
-    let ints = In::build(&config.file_path)?;
-    let mut iter = ints.into_iter();
-
-    let vertex = iter.next().ok_or(InError::Input(
-        ("Missing total number of verticies").to_string(),
-    ))?;
-
-    let edge = iter
-        .next()
-        .ok_or(InError::Input(("Missing expected edges").to_string()))?;
-
-    let source = config.source_vertex;
-    if source >= vertex {
-        return Err(InError::RangeError(source, vertex));
-    };
-
-    let mut graph = Graph::new(vertex as usize);
-    graph.build(edge as usize, iter)?;
+    let (vertex, edge, iter) = graph_input(config)?;
+    let mut graph = Graph::new(vertex);
+    graph.build(edge, iter)?;
     Ok(graph)
 }
 
 pub fn build_digraph(config: &Config) -> Result<DiGraph, InError> {
+    let (vertex, edge, iter) = graph_input(config)?;
+    let mut digraph = DiGraph::new(vertex);
+    digraph.build(edge, iter)?;
+
+    // 🚀 AUTOMATED SAFETY GATE: Enforce that the digraph must be acyclic!
+    // If it's broken, extract the cycle path to give user diagnostic feedback
+    if let Some(deadlock_path) = digraph.cycle() {
+        return Err(InError::CyclicDeadlock(deadlock_path));
+    }
+    Ok(digraph)
+}
+
+fn graph_input(config: &Config) -> Result<(usize, usize, std::vec::IntoIter<i32>), InError> {
     let ints = In::build(&config.file_path)?;
     let mut iter = ints.into_iter();
 
@@ -59,36 +57,5 @@ pub fn build_digraph(config: &Config) -> Result<DiGraph, InError> {
         return Err(InError::RangeError(source, vertex));
     };
 
-    let mut graph = DiGraph::new(vertex as usize);
-    graph.build(edge as usize, iter)?;
-
-    // 🚀 AUTOMATED SAFETY GATE: Enforce that the graph must be acyclic!
-    // If it's broken, extract the cycle path to give user diagnostic feedback
-    if let Some(deadlock_path) = graph.cycle() {
-        return Err(InError::CyclicDeadlock(deadlock_path));
-    }
-
-    Ok(graph)
-}
-
-pub struct Config {
-    file_path: String,
-    pub source_vertex: i32,
-}
-
-impl Config {
-    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
-        args.next();
-        let file_path = args.next().ok_or("Missing file path")?;
-        let source_vertex = args
-            .next()
-            .ok_or("Missing source_vertex argument")?
-            .parse()
-            .map_err(|_| "The source_vertex arg must be an integer")?;
-
-        Ok(Self {
-            file_path,
-            source_vertex,
-        })
-    }
+    Ok((vertex as usize, edge as usize, iter))
 }

@@ -51,10 +51,9 @@ pub enum InputError {
         path: PathBuf,
         source: std::io::Error,
     },
-    #[error("Invalid integer '{text}' on line {line} of '{path}': {source}")]
+    #[error("Invalid integer '{text}' of '{path}': {source}")]
     Parse {
         text: String,
-        line: usize,
         path: PathBuf,
         source: std::num::ParseIntError,
     },

@@ -12,7 +12,7 @@ anyhow = { workspace = true }
 pretty_assertions = { workspace = true }
 plotters  = { workspace = true }
 compare = { workspace = true }
-show-image = { version = "0.14", features = ["image"] }
-image = "0.25"
+# show-image = { version = "0.14", features = ["image"] }
+# image = "0.25"
 
 bodium_core = { workspace = true }
