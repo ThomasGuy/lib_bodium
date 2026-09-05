@@ -10,9 +10,9 @@ cargo run --bin fast_collinear -- bin/collinear_points/data/input20.txt
 
 cargo run --bin graph -- bin/graphs/data/digraph9.txt 5
 
-cargo run --bin rbt_try -- bin/data/bst40.txt geo
+cargo run --bin rbt_try -- bin/rbt_tree/data/bst40.txt geo
 
-cargo run --bin bst_trial -- bin/data/bst40.txt geo
+cargo run --bin bst_tree -- bin/rbt_tree/data/bst40.txt geo
 
 or run with alias as defined in .cargo/config.toml\
 
