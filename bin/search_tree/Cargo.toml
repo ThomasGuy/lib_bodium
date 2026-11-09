@@ -1,10 +1,10 @@
 [package]
-name = "rbt_try"
-version = "0.1.0"
+name = "search_tree"
+version = "0.2.0"
 edition = "2024"
 
 [[bin]]
-name = "rbt_try"
+name = "rbt_tree"
 path = "src/rbt.rs"
 
 [[bin]]

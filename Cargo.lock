@@ -676,15 +676,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63b8176103e19a2643978565ca18b50549f6101881c443590420e4dc998a3c69"
 
 [[package]]
-name = "rbt_try"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "bodium_core",
- "rand",
-]
-
-[[package]]
 name = "redox_users"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -717,6 +708,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "search_tree"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "bodium_core",
+ "rand",
 ]
 
 [[package]]

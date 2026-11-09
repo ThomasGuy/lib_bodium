@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["core", "bin/collinear_points", "bin/graphs", "bin/rbt_tree"]
+members = ["core", "bin/collinear_points", "bin/graphs", "bin/search_tree"]
 
 [workspace.dependencies]
 anyhow = "1"

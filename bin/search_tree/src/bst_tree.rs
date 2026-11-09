@@ -3,10 +3,8 @@ use std::{env, process};
 use bodium_core::{
     data_containers::BinarySearchTree,
     data_types::Point,
-    utils::{Seeder, visualize_bst},
+    utils::{Config, DataFormat, Seeder, visualize_bst},
 };
-pub mod config;
-use crate::config::{Config, DataFormat};
 
 fn main() {
     let config = Config::build(env::args()).unwrap_or_else(|err| {

@@ -3,10 +3,8 @@ use std::{env, process};
 use bodium_core::{
     data_containers::RedBlackTree,
     data_types::Point,
-    utils::{Seeder, visualize_rbt},
+    utils::{Config, DataFormat, Seeder, visualize_rbt},
 };
-pub mod config;
-use crate::config::{Config, DataFormat};
 
 fn main() {
     let config = Config::build(env::args()).unwrap_or_else(|err| {
