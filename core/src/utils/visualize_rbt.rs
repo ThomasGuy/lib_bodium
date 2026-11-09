@@ -1,8 +1,8 @@
+use plotters::prelude::*;
 use std::collections::HashSet;
 
 use crate::data_containers::{Colour, RedBlackTree, red_black_tree::Node};
 use crate::data_types::KvError;
-use plotters::prelude::*;
 
 /// Represents a node's calculated coordinates and its label for drawing
 struct VisualNode {

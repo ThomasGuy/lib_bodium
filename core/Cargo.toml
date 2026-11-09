@@ -4,8 +4,9 @@ version = "0.2.0"
 edition = "2024"
 
 [dependencies]
-compare  = { workspace = true }
-plotters  = { workspace = true }
-pretty_assertions  = { workspace = true }
+compare = { workspace = true }
+plotters = { workspace = true }
+pretty_assertions = { workspace = true }
 rand = { workspace = true }
 thiserror = { workspace = true }
+anyhow = { workspace = true }

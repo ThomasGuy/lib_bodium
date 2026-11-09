@@ -4,3 +4,4 @@ pub mod data_types;
 pub mod utils;
 
 pub use data_containers::{Bag, BinarySearchTree, Colour, DiGraph, Graph, RedBlackTree, Stack};
+// pub use utils::{Config, DataFormat, Seeder};
