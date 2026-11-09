@@ -1,17 +1,12 @@
 [workspace]
 resolver = "3"
-members = [
-  "core",
-  "bin/collinear_points",
-  "bin/graphs",
-  "bin/rbt_tree",
-]
+members = ["core", "bin/collinear_points", "bin/graphs", "bin/rbt_tree"]
 
 [workspace.dependencies]
 anyhow = "1"
 compare = "0.1"
-plotters = "0.3"
+plotters = { version = "0.3", features = ["fontconfig-dlopen"] }
 pretty_assertions = "1.4"
-rand = "0.10"
-thiserror = "2"
+rand = "0.10.3"
+thiserror = "2.0.21"
 bodium_core = { path = "core", version = "0.2.0" }
